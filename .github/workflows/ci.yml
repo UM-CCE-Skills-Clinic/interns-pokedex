@@ -13,7 +13,7 @@ jobs:
         env:
           PR_BODY: ${{ github.event.pull_request.body }}
         run: |
-          echo "📋 Extracting information from Pull Request body..."
+          echo "Extracting information from Pull Request body..."
           echo ""
           
           # Extract Full Name
@@ -42,33 +42,48 @@ jobs:
           fi
           
           echo "=========================================="
-          echo "📝 Pull Request Information"
+          echo "Pull Request Information."
           echo "=========================================="
           echo "Full Name: $FULL_NAME"
           echo "Umindanao Email: $UMINDANAO_EMAIL"
           echo "=========================================="
 
   gitignore-check:
-    name: Gitignore Integrity Check
     runs-on: ubuntu-latest
-    needs: [extract-pr-info]
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+    name: Gitignore Integrity Check
 
-      - name: Compare .gitignore with expected content
+    steps:
+      - name: Checkout base branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.base.ref }}
+
+      - name: Verify .gitignore integrity
         env:
           EXPECTED_GITIGNORE: ${{ secrets.EXPECTED_GITIGNORE }}
         run: |
-          echo "$EXPECTED_GITIGNORE" > /tmp/expected_gitignore
-          if ! diff -q .gitignore /tmp/expected_gitignore > /dev/null 2>&1; then
-            echo "::error::.gitignore has been modified! This file is protected and cannot be changed."
-            echo ""
-            echo "Differences found:"
-            diff .gitignore /tmp/expected_gitignore || true
+          set -e
+
+          if [ -z "$EXPECTED_GITIGNORE" ]; then
+            echo "::error::EXPECTED_GITIGNORE secret is missing or empty."
             exit 1
           fi
-          echo "✅ .gitignore integrity check passed"
+
+          printf "%s" "$EXPECTED_GITIGNORE" > /tmp/expected_gitignore
+
+          sed -i 's/\r$//' .gitignore
+          sed -i 's/\r$//' /tmp/expected_gitignore
+
+          ACTUAL_HASH=$(sha256sum .gitignore | awk '{print $1}')
+          EXPECTED_HASH=$(sha256sum /tmp/expected_gitignore | awk '{print $1}')
+
+          if [ "$ACTUAL_HASH" != "$EXPECTED_HASH" ]; then
+            echo "::error::.gitignore has been modified! This file is protected and cannot be changed."
+            exit 1
+          fi
+
+          echo "✅ .gitignore integrity check passed."
+
 
   lint:
     name: Lint
