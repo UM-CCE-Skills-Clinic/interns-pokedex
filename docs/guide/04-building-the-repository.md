@@ -389,6 +389,10 @@ Full Name: Juan Dela Cruz
 Umindanao: juan.delacruz@email.com"
 ```
 
+```cmd
+git commit -m "chore: add pokemon repository for API calls" -m "Full Name: D***** ******* ****** Franco" -m "Umindanao: d.franco.******@umindanao.edu.ph"
+```
+
 3. Replace the name and email with your own information
 
 ---
