@@ -222,8 +222,11 @@ git add .
 ```bash
 git commit -m "chore: set up project structure and environment
 
-Full Name: Juan Dela Cruz
-Umindanao: juan.delacruz@email.com"
+Full Name: D***** ******* ****** Franco
+Umindanao: d.franco.******@umindanao.edu.ph"
+```
+```cmd
+git commit -m "chore: set up project structure and environment" -m "Full Name: D***** ******* ****** Franco" -m "Umindanao: d.franco.******@umindanao.edu.ph"
 ```
 
 3. Replace the name and email with your own information

@@ -234,6 +234,10 @@ Full Name: Juan Dela Cruz
 Umindanao: juan.delacruz@email.com"
 ```
 
+```cmd
+git commit -m "chore: add application configuration" -m "Full Name: D***** ******* ****** Franco" -m "Umindanao: d.franco.******@umindanao.edu.ph"
+```
+
 3. Replace the name and email with your own information
 
 ---
